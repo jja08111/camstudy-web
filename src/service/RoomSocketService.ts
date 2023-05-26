@@ -140,13 +140,7 @@ export class RoomSocketService {
     if (this._socket != null) {
       return Result.success(undefined);
     }
-    const mediaServerGetResult = await fetchMediaServerUrl(roomId);
-    console.log(mediaServerGetResult.getOrNull());
-    console.log(mediaServerGetResult.throwableOrNull());
-    if (mediaServerGetResult.isFailure) {
-      return Result.error(mediaServerGetResult.throwableOrNull()!);
-    }
-    const mediaServerBaseUrl = mediaServerGetResult.getOrNull()!.url;
+    const mediaServerBaseUrl = "http://localhost:2000";
 
     this._socket = io(`${mediaServerBaseUrl}/room`);
     this._socket.on(
