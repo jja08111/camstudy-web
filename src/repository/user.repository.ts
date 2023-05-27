@@ -112,7 +112,7 @@ export const isUserExists = async (userId: string): Promise<boolean> => {
  */
 export const getSimilarNamedUsers = async (
   userName: string,
-  userId: string
+  requesterUserId: string
 ): Promise<{ maxPage: number; users: UserSearchOverview[] }> => {
   const removeSpace = userName.replace(/ /g, "");
   const splitName = removeSpace.split("#");
@@ -121,7 +121,7 @@ export const getSimilarNamedUsers = async (
       where: {
         name: { startsWith: splitName[0] },
         id: { startsWith: splitName[1] },
-        NOT: { id: userId },
+        NOT: { id: requesterUserId },
       },
     }),
     prisma.user_account.findMany({
@@ -129,7 +129,7 @@ export const getSimilarNamedUsers = async (
       where: {
         name: { startsWith: splitName[0] },
         id: { startsWith: splitName[1] },
-        NOT: { id: userId },
+        NOT: { id: requesterUserId },
       },
       select: {
         id: true,
@@ -137,11 +137,11 @@ export const getSimilarNamedUsers = async (
         introduce: true,
         profile_image: true,
         friend_friend_acceptor_idTouser_account: {
-          where: { requester_id: userId },
+          where: { requester_id: requesterUserId },
           select: { accepted: true },
         },
         friend_friend_requester_idTouser_account: {
-          where: { acceptor_id: userId },
+          where: { acceptor_id: requesterUserId },
           select: { accepted: true },
         },
         status: true,
